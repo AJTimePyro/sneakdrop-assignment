@@ -1,4 +1,6 @@
+from functools import wraps
 from pathlib import Path
+
 from sqlalchemy import event
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -15,16 +17,17 @@ DB_PATH = DB_DIR / "sneakdrop.db"
 engine = create_async_engine(
     f"sqlite+aiosqlite:///{DB_PATH}",
     echo=False,
-    connect_args={"check_same_thread": False},
 )
 
 
 @event.listens_for(engine.sync_engine, "connect")
 def set_sqlite_pragmas(dbapi_connection, connection_record):
     cursor = dbapi_connection.cursor()
+
     cursor.execute("PRAGMA journal_mode = WAL;")
     cursor.execute("PRAGMA busy_timeout = 5000;")
     cursor.execute("PRAGMA foreign_keys = ON;")
+
     cursor.close()
 
 
@@ -42,3 +45,16 @@ class Base(DeclarativeBase):
 async def get_db():
     async with AsyncSessionLocal() as session:
         yield session
+
+
+def with_session(func):
+    """Decorator to automatically provide an AsyncSession if none is passed."""
+
+    @wraps(func)
+    async def wrapper(*args, db: AsyncSession | None = None, **kwargs):
+        if db is not None:
+            return await func(*args, db=db, **kwargs)
+        async with AsyncSessionLocal() as session:
+            return await func(*args, db=session, **kwargs)
+
+    return wrapper

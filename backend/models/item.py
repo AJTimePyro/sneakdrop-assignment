@@ -1,7 +1,9 @@
 from datetime import datetime
 from enum import StrEnum
+
 from sqlalchemy import DateTime, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column
+
 from core.db import Base
 
 
