@@ -1,0 +1,12 @@
+[project]
+name = "backend"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi[standard]>=0.142.1",
+]
+
+[dependency-groups]
+dev = [
+    "black>=26.5.1",
+]
