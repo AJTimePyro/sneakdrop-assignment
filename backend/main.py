@@ -1,9 +1,13 @@
 from fastapi import FastAPI
 
+from routes.buy import router as buy_router
+
 app = FastAPI(
     title="Sneakdrop API",
     version="0.1.0",
 )
+
+app.include_router(buy_router)
 
 
 @app.get("/")
