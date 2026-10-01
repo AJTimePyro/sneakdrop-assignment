@@ -15,6 +15,8 @@ COPY . .
 
 RUN uv sync --frozen --no-dev
 
+RUN python -m db.seed
+
 RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser
 
