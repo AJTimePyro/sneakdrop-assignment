@@ -89,7 +89,10 @@ async def simulate_payment(payment_id: int, base_url: str):
     if random.random() < 0.15:  # ~15% chance of sending a duplicate
         delays.append(random.uniform(0.5, 2))
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=15.0) as client:
         for delay in delays:
             await asyncio.sleep(delay)
-            await client.post(webhook_url, json=payload)
+            try:
+                await client.post(webhook_url, json=payload)
+            except httpx.HTTPError:
+                pass

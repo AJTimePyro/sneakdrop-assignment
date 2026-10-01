@@ -12,7 +12,9 @@ async def main():
         await conn.run_sync(Base.metadata.create_all)
 
     async with AsyncSessionLocal() as session:
+        await session.execute(delete(Payment))
         await session.execute(delete(Hold))
+        await session.execute(delete(Waitlist))
         await session.execute(delete(Sneaker))
 
         sneakers = [
