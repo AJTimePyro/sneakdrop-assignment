@@ -6,6 +6,7 @@ from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from core.events import expiry_wake_event
 from models.item import Hold, HoldStatus, Sneaker, SneakerStatus
 from models.payment import Payment, PaymentStatus
 from utils.time import utcnow
@@ -78,6 +79,7 @@ class PaymentService:
         sneaker.status = SneakerStatus.SOLD
 
         await self.db.commit()
+        expiry_wake_event.set()
         return {"ok": True, "message": "Payment succeeded"}
 
 
