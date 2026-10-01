@@ -3,7 +3,8 @@ import asyncio
 from sqlalchemy import delete
 
 from core.db import AsyncSessionLocal, Base, engine
-from models.item import Hold, Sneaker, SneakerStatus
+from models import *
+from models.item import SneakerStatus
 
 
 async def main():

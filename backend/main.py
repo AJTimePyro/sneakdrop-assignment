@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from routes.buy import router as buy_router
+from routes.payment import router as payment_router
 
 app = FastAPI(
     title="Sneakdrop API",
@@ -8,6 +9,7 @@ app = FastAPI(
 )
 
 app.include_router(buy_router)
+app.include_router(payment_router)
 
 
 @app.get("/")
